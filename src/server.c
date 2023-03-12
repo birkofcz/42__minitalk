@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/12 16:28:49 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/12 16:36:27 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,15 @@ char	ft_bintoc(char *binary) {
 
 char	ft_decode_byte(int sig)
 {
-	int bit;
 	char *binary;
 	int i;
 
-	bit = 1;
 	binary = (char *)malloc(9 * sizeof(char));
 	if (!binary)
 		return ;
 	binary[8] = '\0';
-	while (bit < 9)
+	i = 0;
+	while (i < 9)
 	{
 		if (sig == SIGUSR1)
 			binary[i] = '0';
@@ -64,8 +63,6 @@ void	ft_write_byte(int signal)
 		write(1, &ft_decode_char(signal), 1);
 	}
 }
-
-
 
 
 int	main(void)
