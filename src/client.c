@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/13 14:53:11 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/13 17:02:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,13 @@ void	ft_transmitter(char c, int pid)
 	binary = ft_ctobin(c);
 	while (binary[i] != '\0')
 	{
+		printf("Sending signal for binary %c\n", binary[i]);  // Add this line for debugging
+
 		if (binary[i] == '0')
 			kill(pid, SIGUSR1);
 		else if(binary[i] == '1')
 			kill(pid, SIGUSR2);
+		i++;
 	}
 
 }
