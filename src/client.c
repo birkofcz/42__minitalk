@@ -6,12 +6,11 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/12 15:38:02 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/13 14:53:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-#include <string.h>
 #include <stdio.h>
 /*
 CLIENT SIDE - takes arguments and sends string
@@ -20,6 +19,29 @@ CLIENT SIDE - takes arguments and sends string
 /*
 Encoding table - converting chars to binary to use it with signals.
 */
+
+int	ft_atoi(const char *str)
+{
+	int	sign;
+	int	output;
+
+	sign = 1;
+	output = 0;
+	while (*str == '\f' || *str == '\n' || *str == '\r' || *str == '\t'
+		|| *str == '\v' || *str == ' ')
+		str++;
+	if (*str == '-')
+		sign *= -1;
+	if (*str == '+' || *str == '-')
+		str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		output = output * 10 + (*str - '0');
+		str++;
+	}
+	return (output * sign);
+}
+
 
 char *ft_ctobin(int c)
 {
@@ -40,38 +62,43 @@ char *ft_ctobin(int c)
     return (binary);
 }
 
-char	ft_bintoc(char *binary) {
-    
-	int decimal = 0;
-	int i = 0;
-    
-	while (i < 8)
+void	ft_transmitter(char c, int pid)
+{
+	char *binary;
+	int	i;
+
+	i = 0;
+	binary = ft_ctobin(c);
+	while (binary[i] != '\0')
 	{
-        decimal = decimal * 2 + (binary[i] - '0');
-		i++;
-    }
-    return ((char)decimal);
+		if (binary[i] == '0')
+			kill(pid, SIGUSR1);
+		else if(binary[i] == '1')
+			kill(pid, SIGUSR2);
+	}
+
 }
 
-
-int	main(int argv, char *argc[])
+int	main(int argc, char *argv[])
 {
-	(void)argv;
-	(void)argc;
+	int	pid;
+	int	i;
 
-	char *binary;
-	char *binary2;
-	char c = 'a';
-	char *test = "Hello, world!";
-	int i = 0;
-
-	while (test[i] != '\0')
+	i = 0;
+	if (argc == 3)
 	{
-		binary = ft_ctobin(test[i]);
-		printf("For %c: %s\n", test[i], binary);
-		i++;
+		pid = ft_atoi(argv[1]);
+		while (argv[2][i] != '\0')
+		{
+			ft_transmitter(argv[2][i], pid);
+			i++;
+		}
 	}
-	binary2 = ft_ctobin(c);
-	printf("Binary for char c is: %s. Converted back to char: %c\n", binary, ft_bintoc(binary2));
+	else
+	{
+		printf("\033[91mError: wrong format.\033[0m\n");
+		printf("\033[33mTry: ./client <PID> <MESSAGE>\033[0m\n");
+		return (1);
+	}
 	return (0);
 }
