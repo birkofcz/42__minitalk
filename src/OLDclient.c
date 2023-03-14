@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/14 16:16:48 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/13 17:02:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ CLIENT SIDE - takes arguments and sends string
 */
 
 /*
-ft_atoi - from libft to convert PID number from command line argument. 
+Encoding table - converting chars to binary to use it with signals.
 */
 
 int	ft_atoi(const char *str)
@@ -42,14 +42,11 @@ int	ft_atoi(const char *str)
 	return (output * sign);
 }
 
-/* 
-ft_ctobin - encoding the character into binary, written in string.
- */
 
-char	*ft_ctobin(int c)
+char *ft_ctobin(int c)
 {
 	char	*binary;
-	int		i;
+	int i;
 
 	binary = (char *)malloc(9 * sizeof(char));
 	if (!binary)
@@ -57,37 +54,33 @@ char	*ft_ctobin(int c)
 	binary[8] = '\0';
 	i = 0;
 	while (i < 8)
-	{
-		binary[7 - i] = (c % 2) + '0';
-		c = c / 2;
-		i++;
-	}
-	return (binary);
+    {
+        binary[7 - i] = (c % 2) + '0';
+        c = c / 2;
+        i++;
+    }
+    return (binary);
 }
 
-/* 
-ft_sendbyte - taking the binary of the char, signalling to server - iterate 
-hrough the binary string, SIGUSR1 if it is a 0, SIGUSR2 when it is a 1.
- */
-
-void	ft_sendbyte(char c, int pid)
+void	ft_transmitter(char c, int pid)
 {
-	char	*binary;
-	int		i;
+	char *binary;
+	int	i;
 
-	binary = ft_ctobin(c);
 	i = 0;
+	binary = ft_ctobin(c);
 	while (binary[i] != '\0')
 	{
+		printf("Sending signal for binary %c\n", binary[i]);  // Add this line for debugging
+
 		if (binary[i] == '0')
 			kill(pid, SIGUSR1);
-		else if (binary[i] == '1')
+		else if(binary[i] == '1')
 			kill(pid, SIGUSR2);
 		i++;
 	}
-	free(binary);
-}
 
+}
 
 int	main(int argc, char *argv[])
 {
@@ -100,7 +93,7 @@ int	main(int argc, char *argv[])
 		pid = ft_atoi(argv[1]);
 		while (argv[2][i] != '\0')
 		{
-			ft_sendbyte(argv[2][i], pid);
+			ft_transmitter(argv[2][i], pid);
 			i++;
 		}
 	}
