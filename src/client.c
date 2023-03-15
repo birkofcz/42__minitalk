@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/14 19:10:57 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/15 10:18:18 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,12 @@ char	*ft_ctobin(int c)
 }
 
 /* 
-ft_sendbyte - taking the binary of the char, signalling to server - iterate 
-hrough the binary string, SIGUSR1 if it is a 0, SIGUSR2 when it is a 1.
+ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
+to server - iterate through the binary string, SIGUSR1 for 0, 
+SIGUSR2 for 1.
  */
 
-void	ft_sendbyte(char c, int pid)
+void	ft_sbyte(char c, int pid)
 {
 	char	*binary;
 	int		i;
@@ -100,7 +101,7 @@ int	main(int argc, char *argv[])
 		pid = ft_atoi(argv[1]);
 		while (argv[2][i] != '\0')
 		{
-			ft_sendbyte(argv[2][i], pid);
+			ft_sbyte(argv[2][i], pid);
 			i++;
 		}
 	}

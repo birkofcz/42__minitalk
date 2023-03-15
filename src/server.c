@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 09:48:47 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/15 10:15:50 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 SERVER PART - generating PID (Process ID), printing it and signal handling
 */
 
-/* #include "../include/minitalk.h"
-#include <stdio.h>
-#include <string.h>
-#include <signal.h>
+#include "../include/minitalk.h"
+#include <stdio.h> // printf - replace with ft_printf
+#include <stdlib.h>
+#include <string.h> // memset - call it from libft
 
-char	ft_bintoc(char *binary)
+char	ft_bintoc(const char *binary)
 {
 	int	decimal;
 	int	i;
@@ -27,121 +27,21 @@ char	ft_bintoc(char *binary)
 	decimal = 0;
 	i = 0;
 	while (binary[i] != '\0')
-	{
-		decimal = decimal * 2 + (binary[i] - '0');
-		i++;
-	}
-	printf("%d", decimal);
+		decimal = decimal * 2 + (binary[i++] - '0');
 	return ((char)decimal);
 }
 
-void	ft_gotbyte(int sig)
+void	ft_rbyte(int sig)
 {
-	char	*binary;
-	int		i;
-	char	c;
+	static char	binary[9];
+	static int	i = 0;
+	char		c;
 
-	printf("Received signal: %d", sig);
-	binary = (char *)malloc(9 * sizeof(char));
-	if (!binary)
-		return ;
-	memset(binary, '\0', 9);
-	//binary[8] = '\0';
-	i = 0;
-	//while (binary[i] != '\0')
-	while (i < 8)
-	{
-		if (sig == SIGUSR1)
-		{
-			binary[i] = '0';
-			i++;
-		}
-		else if (sig == SIGUSR2)
-		{
-			binary[i] = '1';
-			i++;
-		}
-	}
-	c = ft_bintoc(binary);
-	write(1, &c, 1);
-	free(binary);
-}
-
-int	main(int argc, char *argv[])
-{
-    int	pid;
-
-    (void)argv;
-	(void)argc;
-    pid = getpid();
-    printf("Server started.\nProcess ID: \033[31m%d\033[0m\nWaiting for signal...\n", pid);
-	while (argc == 1)
-	{
-		signal(SIGUSR1, ft_gotbyte);
-   		signal(SIGUSR2, ft_gotbyte);
-		pause();
-	}
-    return (0);
-} */
-
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <time.h>
-
-char ft_bintoc(const char *binary) {
-  int decimal;
-  int i;
-
-  decimal = 0;
-  i = 0;
-  while (binary[i] != '\0') {
-    decimal = decimal * 2 + (binary[i] - '0');
-    i++;
-  }
-  return ((char)decimal);
-}
-
-/* char *binary;
-int i;
-
-void ft_gotbyte(int sig) {
-  //printf("Received signal: %d\n", sig);
-  if (sig == SIGUSR1) {
-    binary[i] = '0';
-    i++;
-  } else if (sig == SIGUSR2) {
-    binary[i] = '1';
-    i++;
-  }
-
-  if (i == 8) {
-    binary[i] = '\0';
-    char c = ft_bintoc(binary);
-    write(1, &c, 1);
-    i = 0;
-  }
-} */
-
-
-void ft_gotbyte(int sig) 
-{
-	static char binary[9];
-	static int i = 0;
-	char c;
-
-	if (i == 0)
-		memset(binary, '0', 9);
-	//binary[8] = '\0';
 	if (sig == SIGUSR1)
-		binary[i] = '0';
+		binary[i++] = '0';
 	else if (sig == SIGUSR2)
-		binary[i] = '1';
-	i++;
-
-	if (i == 8) 
+		binary[i++] = '1';
+	if (i == 8)
 	{
 		binary[i] = '\0';
 		c = ft_bintoc(binary);
@@ -150,20 +50,20 @@ void ft_gotbyte(int sig)
 	}
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-  int pid;
+	int	pid_server;
 
-  (void)argv;
-  (void)argc;
-  pid = getpid();
-  printf("Server started.\nProcess ID: \033[31m%d\033[0m\nWaiting for signal...\n", pid);
+	(void)argv;
+	(void)argc;
+	pid_server = getpid();
+	printf("Server started.\nProcess ID: \033[31m%d\033[0m\n", pid_server);
+	printf("Waiting for signal...\n");
 	while (argc == 1)
 	{
-	signal(SIGUSR1, ft_gotbyte);
-	signal(SIGUSR2, ft_gotbyte);
-	pause();
+		signal(SIGUSR1, ft_rbyte);
+		signal(SIGUSR2, ft_rbyte);
+		pause();
 	}
 	return (0);
 }
-
