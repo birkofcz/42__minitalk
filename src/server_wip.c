@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 09:48:47 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/14 19:27:17 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	main(int argc, char *argv[])
 #include <unistd.h>
 #include <time.h>
 
-char ft_bintoc(const char *binary) {
+char ft_bintoc(char *binary) {
   int decimal;
   int i;
 
@@ -125,45 +125,49 @@ void ft_gotbyte(int sig) {
   }
 } */
 
+char *binary;
+int i;
 
-void ft_gotbyte(int sig) 
-{
-	static char binary[9];
-	static int i = 0;
-	char c;
+void ft_gotbyte(int sig) {
 
-	if (i == 0)
-		memset(binary, '0', 9);
-	//binary[8] = '\0';
-	if (sig == SIGUSR1)
-		binary[i] = '0';
-	else if (sig == SIGUSR2)
-		binary[i] = '1';
-	i++;
+  if (sig == SIGUSR1) {
+    binary[i] = '0';
+    i++;
+  } else if (sig == SIGUSR2) {
+    binary[i] = '1';
+    i++;
+  }
 
-	if (i == 8) 
-	{
-		binary[i] = '\0';
-		c = ft_bintoc(binary);
-		write(1, &c, 1);
-		i = 0;
-	}
+  if (i == 8) {
+    binary[i] = '\0';
+    char c = ft_bintoc(binary);
+    write(1, &c, 1);
+    i = 0;
+  }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   int pid;
 
   (void)argv;
   (void)argc;
   pid = getpid();
   printf("Server started.\nProcess ID: \033[31m%d\033[0m\nWaiting for signal...\n", pid);
-	while (argc == 1)
-	{
-	signal(SIGUSR1, ft_gotbyte);
-	signal(SIGUSR2, ft_gotbyte);
-	pause();
-	}
-	return (0);
+
+  binary = (char *)malloc(9 * sizeof(char));
+  if (!binary)
+    return 1;
+  memset(binary, '\0', 9);
+  i = 0;
+
+  while (argc == 1) {
+    signal(SIGUSR1, ft_gotbyte);
+    signal(SIGUSR2, ft_gotbyte);
+    pause();
+  }
+
+  free(binary);
+  return (0);
 }
+
 
