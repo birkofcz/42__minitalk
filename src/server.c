@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 10:15:50 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/15 11:57:29 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	ft_bintoc(const char *binary)
 		decimal = decimal * 2 + (binary[i++] - '0');
 	return ((char)decimal);
 }
+
 
 void	ft_rbyte(int sig)
 {
