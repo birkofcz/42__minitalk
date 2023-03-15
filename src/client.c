@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 11:47:40 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/15 16:40:39 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	ft_sbyte(char c, int pid)
 		else if (binary[i] == '1')
 			kill(pid, SIGUSR2);
 		i++;
-		usleep(350);
+		usleep(199);
 	}
 	free(binary);
 }
@@ -104,6 +104,7 @@ int	main(int argc, char *argv[])
 			ft_sbyte(argv[2][i], pid);
 			i++;
 		}
+		ft_sbyte('\0', pid);
 	}
 	else
 	{
