@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 14:02:02 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/17 13:29:43 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 16:10:45 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 /*
 CLIENT SIDE BONUS - waiting to recieve the acknowledgement message.
 
-/*
 ft_atoi, itoa and support functions - include from libft!
 */
 static int	ft_str_len(long n)
@@ -96,6 +95,18 @@ int	ft_atoi(const char *str)
 ft_ctobin - encoding the character into binary, written in string.
  */
 
+int signal_received = 0;
+
+void ft_ackmessage(int sig)
+{
+    if (sig == SIGUSR1)
+    {
+        signal_received++;
+    }
+	if (sig == SIGUSR2)
+		signal_received++;
+}
+
 char	*ft_ctobin(int c)
 {
 	char	*binary;
@@ -113,17 +124,6 @@ char	*ft_ctobin(int c)
 		i++;
 	}
 	return (binary);
-}
-
-/* 
-ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
-to server - iterate through the binary string, SIGUSR1 for 0, 
-SIGUSR2 for 1.
- */
-void	ft_ackmessage(int sig)
-{
-	if (sig == SIGUSR1)
-		printf("Message succesfully recieved by server!");
 }
 
 void	ft_sbyte(char c, int pid)
@@ -145,11 +145,10 @@ void	ft_sbyte(char c, int pid)
 	free(binary);
 }
 
-int	main(int argc, char *argv[])
+/* int	main(int argc, char *argv[])
 {
 	int	pid_server;
-	int	pid_client;
-	char	pids_char;
+	char	*pids_char;
 	int	i;
 
 	i = 0;
@@ -161,8 +160,11 @@ int	main(int argc, char *argv[])
 			ft_sbyte(argv[2][i], pid_server);
 			i++;
 		}
+		i = 0;
 		ft_sbyte('\0', pid_server);
-		ft_sbyte
+		pids_char = ft_itoa(pid_server);
+		while (pids_char[i] != '\0')
+			ft_sbyte(pids_char[i++], pid_server);
 		while (1)
 		{
 			signal(SIGUSR1, ft_ackmessage);
@@ -176,4 +178,48 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	return (0);
+} */
+
+// ... (Other functions and includes remain the same)
+
+
+int main(int argc, char *argv[])
+{
+    int pid_server;
+    char *pids_char;
+    int i;
+
+    i = 0;
+    if (argc == 3)
+    {
+        pid_server = ft_atoi(argv[1]);
+        while (argv[2][i] != '\0')
+        {
+            ft_sbyte(argv[2][i], pid_server);
+            i++;
+        }
+        i = 0;
+        ft_sbyte('\0', pid_server);
+        pids_char = ft_itoa(getpid());
+        while (pids_char[i] != '\0')
+            ft_sbyte(pids_char[i++], pid_server);
+        ft_sbyte('\0', pid_server);
+        free(pids_char);
+        while (signal_received != 3 )
+        {
+        	signal(SIGUSR1, ft_ackmessage);
+			signal(SIGUSR2, ft_ackmessage);
+        	pause();
+        }
+        printf("Message successfully received by server!\n");
+    }
+    else
+    {
+        printf("\033[91mError: wrong format.\033[0m\n");
+        printf("\033[33mTry: ./client <PID> <MESSAGE>\033[0m\n");
+        return (1);
+    }
+    return (0);
 }
+
+
