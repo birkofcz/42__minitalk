@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 14:01:00 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/17 16:12:46 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 16:15:28 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ void ft_rbyte(int sig)
         {
             if (c == '\0')
             {
-                client_pid_str[client_pid_idx] = '\0'; //// Properly terminate the client_pid_str 
+                client_pid_str[client_pid_idx] = '\0'; //// Properly terminate the client_pid_str
+				usleep(500); 
                 handle_client_pid(client_pid_str);
                 client_pid_idx = 0;
                 listening_for_pid = 0;
