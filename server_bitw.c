@@ -1,0 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server_bitw.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
+/*   Updated: 2023/03/17 12:15:01 by sbenes           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
+SERVER PART - generating PID (Process ID), printing it and signal handling
+*/
+
+#include "include/minitalk.h"
+#include <stdio.h> // printf - replace with ft_printf
+#include <stdlib.h>
+#include <string.h> // memset - call it from libft
+#include <time.h>
+
+void	ft_handler(int signal)
+{
+	static int	bit;
+	static int	i;
+
+	if (signal == SIGUSR1)
+		i |= (0x01 << bit);
+	bit++;
+	if (bit == 8)
+	{
+		printf("%c", i);
+		bit = 0;
+		i = 0;
+	}
+}
+
+int	main(int argc, char **argv)
+{
+	int	pid;
+
+	(void)argv;
+	if (argc != 1)
+	{
+		printf("\033[91mError: wrong format.\033[0m\n");
+		printf("\033[33mTry: ./server\033[0m\n");
+		return (0);
+	}
+	pid = getpid();
+	printf("\033[94mPID\033[0m \033[96m->\033[0m %d\n", pid);
+	printf("\033[90mWaiting for a message...\033[0m\n");
+	while (argc == 1)
+	{
+		signal(SIGUSR1, ft_handler);
+		signal(SIGUSR2, ft_handler);
+		pause ();
+	}
+	return (0);
+}

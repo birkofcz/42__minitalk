@@ -1,24 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bitw.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 16:40:39 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 12:17:39 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minitalk.h"
+#include "include/minitalk.h"
 #include <stdio.h>
-/*
-CLIENT SIDE - takes arguments and sends string
-*/
-
-/*
-ft_atoi - from libft to convert PID number from command line argument. 
-*/
 
 int	ft_atoi(const char *str)
 {
@@ -42,55 +35,23 @@ int	ft_atoi(const char *str)
 	return (output * sign);
 }
 
-/* 
-ft_ctobin - encoding the character into binary, written in string.
- */
-
-char	*ft_ctobin(int c)
+void	ft_send_bits(int pid, char i)
 {
-	char	*binary;
-	int		i;
+	int	bit;
 
-	binary = (char *)malloc(9 * sizeof(char));
-	if (!binary)
-		return (NULL);
-	binary[8] = '\0';
-	i = 0;
-	while (i < 8)
+	bit = 0;
+	while (bit < 8)
 	{
-		binary[7 - i] = (c % 2) + '0';
-		c = c / 2;
-		i++;
-	}
-	return (binary);
-}
-
-/* 
-ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
-to server - iterate through the binary string, SIGUSR1 for 0, 
-SIGUSR2 for 1.
- */
-
-void	ft_sbyte(char c, int pid)
-{
-	char	*binary;
-	int		i;
-
-	binary = ft_ctobin(c);
-	i = 0;
-	while (binary[i] != '\0')
-	{
-		if (binary[i] == '0')
+		if ((i & (0x01 << bit)) != 0)
 			kill(pid, SIGUSR1);
-		else if (binary[i] == '1')
+		else
 			kill(pid, SIGUSR2);
-		i++;
 		usleep(300);
+		bit++;
 	}
-	free(binary);
 }
 
-int	main(int argc, char *argv[])
+int	main(int argc, char **argv)
 {
 	int	pid;
 	int	i;
@@ -101,10 +62,10 @@ int	main(int argc, char *argv[])
 		pid = ft_atoi(argv[1]);
 		while (argv[2][i] != '\0')
 		{
-			ft_sbyte(argv[2][i], pid);
+			ft_send_bits(pid, argv[2][i]);
 			i++;
 		}
-		ft_sbyte('\0', pid);
+		ft_send_bits(pid, '\n');
 	}
 	else
 	{

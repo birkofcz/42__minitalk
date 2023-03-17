@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/15 17:07:21 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 12:41:49 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	ft_rbyte(int sig)
 	{
 		binary[i] = '\0';
 		c = ft_bintoc(binary);
+
 		write(1, &c, 1);
 		i = 0;
 	}
