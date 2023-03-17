@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 14:01:00 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/17 16:35:50 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 16:43:32 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void handle_client_pid(const char *client_pid_str)
 		i++;
 	}
 	kill(client_pid, SIGUSR2);
+	usleep(300);
     printf("Client PID received: %d\n", client_pid);
 }
 
