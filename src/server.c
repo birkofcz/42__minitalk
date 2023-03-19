@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 14:36:31 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:09:05 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,10 @@ void	ft_rbyte(int sig, siginfo_t *info, void *ucontext)
 		c = ft_bintoc(binary);
 		write(1, &c, 1);
 		i = 0;
-    }
-    kill(info->si_pid, SIGUSR1);
+		if (c == '\0')
+			write(1, "\n", 1);
+	}
+	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(int argc, char *argv[])
@@ -68,16 +70,23 @@ int	main(int argc, char *argv[])
 	struct sigaction	sa;
 
 	(void)argv;
-	(void)argc;
-	pid_server = getpid();
-	ft_printf("Server started.\nProcess ID: \033[31m%d\033[0m\n", pid_server);
-	ft_printf("Waiting for signal...\n");
-	ft_memset(&sa, 0, sizeof(sa));
-	sa.sa_sigaction = ft_rbyte;
-	sa.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
-	while (argc == 1)
-		pause();
+	if (argc == 1)
+	{
+		pid_server = getpid();
+		ft_printf("\n\033[32mServer started.\033[0m\nProcess ID: \033[31m%d\033[0m\n", pid_server);
+		ft_printf("Receiving...\n");
+		ft_memset(&sa, 0, sizeof(sa));
+		sa.sa_sigaction = ft_rbyte;
+		sa.sa_flags = SA_SIGINFO;
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
+		while (1)
+			pause();
+	}
+	else
+	{
+		ft_printf("\n\033[31mError!\033[0m\n");
+		ft_printf("\033[32mEnter: ./server\033[0m\n\n");
+	}
 	return (0);
 }
