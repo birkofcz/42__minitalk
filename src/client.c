@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 12:04:10 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 14:36:58 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 CLIENT SIDE - takes arguments and sends string
 */
 
-int	ft_atoi(const char *str)
+/* int	ft_atoi(const char *str)
 {
 	int	sign;
 	int	output;
@@ -36,7 +36,7 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return (output * sign);
-}
+} */
 
 /* 
 ft_ctobin - encoding the character into binary, written in string.
@@ -121,8 +121,8 @@ int	main(int argc, char *argv[])
 	}
 	else
 	{
-		printf("\033[91mError: wrong format.\033[0m\n");
-		printf("\033[33mTry: ./client <PID> <MESSAGE>\033[0m\n");
+		ft_printf("\033[91mError: wrong format.\033[0m\n");
+		ft_printf("\033[33mTry: ./client <PID> <MESSAGE>\033[0m\n");
 		return (1);
 	}
 	return (0);

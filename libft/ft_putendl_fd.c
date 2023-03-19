@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
+/*   By: sbenes <sbenes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/12 12:20:40 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 14:19:43 by sbenes           ###   ########.fr       */
+/*   Created: 2023/01/29 11:55:52 by sbenes            #+#    #+#             */
+/*   Updated: 2023/02/02 17:48:03 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../libft/libft.h"
-# include "../libft/ft_printf.h"
-# include <sys/types.h>
-# include <signal.h>
-# include <unistd.h>
+void	ft_putendl_fd(char *s, int fd)
+{
+	int	i;
 
-
-#endif
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
+	{
+		ft_putchar_fd(s[i], fd);
+		i++;
+	}
+	ft_putchar_fd('\n', fd);
+}

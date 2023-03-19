@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 12:25:56 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 14:36:31 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ int	main(int argc, char *argv[])
 	(void)argv;
 	(void)argc;
 	pid_server = getpid();
-	printf("Server started.\nProcess ID: \033[31m%d\033[0m\n", pid_server);
-	printf("Waiting for signal...\n");
-	memset(&sa, 0, sizeof(sa));
+	ft_printf("Server started.\nProcess ID: \033[31m%d\033[0m\n", pid_server);
+	ft_printf("Waiting for signal...\n");
+	ft_memset(&sa, 0, sizeof(sa));
 	sa.sa_sigaction = ft_rbyte;
 	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &sa, NULL);

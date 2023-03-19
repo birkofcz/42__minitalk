@@ -5,37 +5,49 @@
 #                                                     +:+ +:+         +:+      #
 #    By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/05 11:25:26 by sbenes            #+#    #+#              #
-#    Updated: 2023/03/06 14:56:46 by sbenes           ###   ########.fr        #
+#    Created: 2023/03/19 14:21:18 by sbenes            #+#    #+#              #
+#    Updated: 2023/03/19 14:35:49 by sbenes           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#compilation
+# Makefile
+
+# Makefile
+
+# Makefile
+
+SRC_DIR = src/
+SRC = $(addprefix $(SRC_DIR), server.c client.c)
+OBJ = $(SRC:.c=.o)
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-AR = ar rcs
 
-#sources
-SRC = ft_printf.c ft_putchar.c ft_putstr.c ft_putnbr.c ft_putptr.c ft_puthex.c ft_putunsigned.c
-OBJ = $(SRC:.c=.o)
-NAME = libftprintf.a
+LIBFT = libft/libft.a
+LIBFT_DIR = libft/
 
-#clean
-RM = rm -f
+.PHONY: all clean fclean re libft
 
-%.o: %.c 
+all: libft server client
+
+libft:
+	$(MAKE) -C $(LIBFT_DIR)
+
+server: $(SRC_DIR)server.o $(LIBFT)
+	$(CC) $(CFLAGS) $(SRC_DIR)server.o $(LIBFT) -o server
+
+client: $(SRC_DIR)client.o $(LIBFT)
+	$(CC) $(CFLAGS) $(SRC_DIR)client.o $(LIBFT) -o client
+
+$(SRC_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-all: $(NAME)
-
-$(NAME): $(OBJ) 
-	$(AR) $(NAME) $(OBJ)
-	
-
 clean:
-			$(RM) $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	rm -f $(OBJ)
 
-fclean:		clean
-			$(RM) $(NAME)
+fclean: clean
+	$(MAKE) -C $(LIBFT_DIR) fclean
+	rm -f server client
 
-re:			fclean all
+re: fclean all

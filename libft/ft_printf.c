@@ -35,9 +35,9 @@ int	ft_crossroad(va_list args, char identifier)
 
 	nc_printed = 0;
 	if (identifier == 'c')
-		nc_printed = ft_putchar(va_arg(args, int));
+		nc_printed = ft_putchar_ftp(va_arg(args, int));
 	else if (identifier == 's')
-		nc_printed = ft_putstr(va_arg(args, char *));
+		nc_printed = ft_putstr_ftp(va_arg(args, char *));
 	else if (identifier == 'p')
 		nc_printed = ft_putptr(va_arg(args, void *));
 	else if (identifier == 'd' || identifier == 'i')
@@ -47,7 +47,7 @@ int	ft_crossroad(va_list args, char identifier)
 	else if (identifier == 'x' || identifier == 'X')
 		nc_printed = ft_putnbr_hex(va_arg(args, unsigned int), identifier);
 	else if (identifier == '%')
-		nc_printed = ft_putchar('%');
+		nc_printed = ft_putchar_ftp('%');
 	return (nc_printed);
 }
 /*
@@ -79,7 +79,7 @@ int	ft_printf(const char *str, ...)
 			i++;
 		}
 		else
-			nc_printed = nc_printed + ft_putchar(str[i]);
+			nc_printed = nc_printed + ft_putchar_ftp(str[i]);
 		i++;
 	}
 	va_end(args);

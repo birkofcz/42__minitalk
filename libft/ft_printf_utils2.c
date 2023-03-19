@@ -13,24 +13,7 @@
 #include "ft_printf.h"
 
 /*
-ft_putnbr_hex - converts the input to its hexadecimal value, 
-checking for case indicator (%x or %X).
-
-START
-|
-Setting the hex string to choose the character from,
-in two variants depending on the case we want.
-|
-|
-When bigger than 15, recursive call with a nb / 16. 
-Increment len to update the characters writen.
-|
-write to stdout the value modulo 16 = result representing 
-the index on hex string. Increment len.
-|
-Returns len to measure characters written.
-|
-END
+HEXADECIMAL
 */
 
 int	ft_putnbr_hex(unsigned int nb, char x)
@@ -46,5 +29,24 @@ int	ft_putnbr_hex(unsigned int nb, char x)
 		len += ft_putnbr_hex(nb / 16, x);
 	write(1, &hex[nb % 16], 1);
 	len++;
+	return (len);
+}
+
+/*
+UNSIGNED
+*/
+
+int	ft_putnbr_unsigned(unsigned int nb)
+{
+	int	len;
+
+	len = 0;
+	if (nb >= 10)
+	{
+		len += ft_putnbr_unsigned(nb / 10);
+		len += ft_putnbr_unsigned(nb % 10);
+	}
+	else
+		len += ft_putchar_ftp(nb + 48);
 	return (len);
 }
