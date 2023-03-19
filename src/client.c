@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client_hs.c                                        :+:      :+:    :+:   */
+/*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 11:03:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 12:04:10 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 #include <stdio.h>
 /*
 CLIENT SIDE - takes arguments and sends string
-*/
-
-/*
-ft_atoi - from libft to convert PID number from command line argument. 
 */
 
 int	ft_atoi(const char *str)
@@ -71,12 +67,12 @@ to server - iterate through the binary string, SIGUSR1 for 0,
 SIGUSR2 for 1.
  */
 
-volatile sig_atomic_t ack_received = 0;
+int	handshake = 0;
 
 void ft_handshake(int sig)
 {
     (void)sig;
-    ack_received = 1;
+    handshake = 1;
 }
 
 void ft_sbyte(char c, int pid)
@@ -84,8 +80,8 @@ void ft_sbyte(char c, int pid)
     char *binary;
     int i;
 
-    signal(SIGUSR1, ft_handshake); // register the acknowledgment signal handlers
-    signal(SIGUSR2, ft_handshake);
+    signal(SIGUSR1, ft_handshake); // register the acknowledgment signal
+    //signal(SIGUSR2, ft_handshake);
 
     binary = ft_ctobin(c);
     i = 0;
@@ -97,12 +93,11 @@ void ft_sbyte(char c, int pid)
             kill(pid, SIGUSR2);
 
         // Wait for the acknowledgment signal
-        while (!ack_received)
+        while (!handshake)
         {
             usleep(200);
         }
-
-        ack_received = 0;
+        handshake = 0;
         i++;
     }
     free(binary);
@@ -119,8 +114,8 @@ int	main(int argc, char *argv[])
 		pid = ft_atoi(argv[1]);
 		while (argv[2][i] != '\0')
 		{
-			ft_sbyte(argv[2][i], pid);
-			i++;
+			ft_sbyte(argv[2][i++], pid);
+			//i++;
 		}
 		ft_sbyte('\0', pid);
 	}
