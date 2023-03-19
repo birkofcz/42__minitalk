@@ -6,19 +6,24 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 15:15:34 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:23:07 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
+int	g_handshake = 0;
+
 /*
-CLIENT SIDE - takes arguments and sends string
+CLIENT SIDE - takes arguments and sends string. 
+Decode str to binary. Sends bit by bit using signals.
+Waiting for handshake from server after each bit - works 
+faster and without errors.
 */
 
-/* 
+/*
 ft_ctobin - encoding the character into binary, written in string.
- */
+*/
 
 char	*ft_ctobin(int c)
 {
@@ -42,10 +47,8 @@ char	*ft_ctobin(int c)
 /* 
 ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
 to server - iterate through the binary string, SIGUSR1 for 0, 
-SIGUSR2 for 1.
+SIGUSR2 for 1. Waiting for handshake from server, speeds up the process.
  */
-
-int	g_handshake = 0;
 
 void	ft_handshake(int sig)
 {
@@ -67,7 +70,7 @@ void	ft_sbyte(char c, int pid)
 			kill(pid, SIGUSR1);
 		else if (binary[i] == '1')
 			kill(pid, SIGUSR2);
-		while (!handshake)
+		while (!g_handshake)
 			usleep(200);
 		g_handshake = 0;
 		i++;
@@ -75,6 +78,11 @@ void	ft_sbyte(char c, int pid)
 	free(binary);
 }
 
+/*
+MAIN - iterates through message, sending bytes.
+Sends '\0' last, signalling server to write newline.
+Checking for errors. 
+*/
 int	main(int argc, char *argv[])
 {
 	int	pid;

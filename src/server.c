@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 15:14:11 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:25:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ ft_rbyte - function to handle signal recieving, writing bit after
 bit into the binary.
 Full binary represents one byte - decoded into char with bintoc.
 Writes the char on screen.
+Signalling back the handshake for client to continue with sending.
 Repeat.
+Using struct sigaction - with information about the client PID.
 */
 
 void	ft_rbyte(int sig, siginfo_t *info, void *ucontext)
