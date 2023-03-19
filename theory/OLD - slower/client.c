@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client_hs.c                                        :+:      :+:    :+:   */
+/*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 11:03:28 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 17:05:47 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,41 +71,23 @@ to server - iterate through the binary string, SIGUSR1 for 0,
 SIGUSR2 for 1.
  */
 
-volatile sig_atomic_t ack_received = 0;
-
-void ft_handshake(int sig)
+void	ft_sbyte(char c, int pid)
 {
-    (void)sig;
-    ack_received = 1;
-}
+	char	*binary;
+	int		i;
 
-void ft_sbyte(char c, int pid)
-{
-    char *binary;
-    int i;
-
-    signal(SIGUSR1, ft_handshake); // register the acknowledgment signal handlers
-    signal(SIGUSR2, ft_handshake);
-
-    binary = ft_ctobin(c);
-    i = 0;
-    while (binary[i] != '\0')
-    {
-        if (binary[i] == '0')
-            kill(pid, SIGUSR1);
-        else if (binary[i] == '1')
-            kill(pid, SIGUSR2);
-
-        // Wait for the acknowledgment signal
-        while (!ack_received)
-        {
-            usleep(200);
-        }
-
-        ack_received = 0;
-        i++;
-    }
-    free(binary);
+	binary = ft_ctobin(c);
+	i = 0;
+	while (binary[i] != '\0')
+	{
+		if (binary[i] == '0')
+			kill(pid, SIGUSR1);
+		else if (binary[i] == '1')
+			kill(pid, SIGUSR2);
+		i++;
+		usleep(300);
+	}
+	free(binary);
 }
 
 int	main(int argc, char *argv[])

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server_hs.c                                        :+:      :+:    :+:   */
+/*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 11:05:22 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/17 12:41:49 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@ SERVER PART - generating PID (Process ID), printing it and signal handling
 */
 
 #include "../include/minitalk.h"
+#include <stdio.h> // printf - replace with ft_printf
+#include <stdlib.h>
+#include <string.h> // memset - call it from libft
+#include <time.h>
 
 char	ft_bintoc(const char *binary)
 {
@@ -28,9 +32,8 @@ char	ft_bintoc(const char *binary)
 	return ((char)decimal);
 }
 
-void	ft_rbyte(int sig, siginfo_t *info, void *ucontext) 
+void	ft_rbyte(int sig)
 {
-	(void)ucontext;
 	static char	binary[9];
 	static int	i = 0;
 	char		c;
@@ -47,30 +50,21 @@ void	ft_rbyte(int sig, siginfo_t *info, void *ucontext)
 		write(1, &c, 1);
 		i = 0;
 	}
-	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(int argc, char *argv[])
 {
 	int	pid_server;
-	struct sigaction	sa;
 
 	(void)argv;
 	(void)argc;
 	pid_server = getpid();
 	printf("Server started.\nProcess ID: \033[31m%d\033[0m\n", pid_server);
 	printf("Waiting for signal...\n");
-
-	memset(&sa, 0, sizeof(sa));
-	sa.sa_sigaction = ft_rbyte;
-	sa.sa_flags = SA_SIGINFO;
-
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
 	while (argc == 1)
 	{
-//		signal(SIGUSR1, ft_rbyte);
-//		signal(SIGUSR2, ft_rbyte);
+		signal(SIGUSR1, ft_rbyte);
+		signal(SIGUSR2, ft_rbyte);
 		pause();
 	}
 	return (0);
