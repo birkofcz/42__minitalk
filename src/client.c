@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 13:34:31 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 15:06:10 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:15:34 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,20 @@ to server - iterate through the binary string, SIGUSR1 for 0,
 SIGUSR2 for 1.
  */
 
-int	handshake = 0;
+int	g_handshake = 0;
 
 void	ft_handshake(int sig)
 {
 	(void)sig;
-	handshake = 1;
+	g_handshake = 1;
 }
 
 void	ft_sbyte(char c, int pid)
 {
-	char *binary;
-	int i;
+	char	*binary;
+	int		i;
 
-	signal(SIGUSR1, ft_handshake); 
+	signal(SIGUSR1, ft_handshake);
 	binary = ft_ctobin(c);
 	i = 0;
 	while (binary[i] != '\0')
@@ -69,7 +69,7 @@ void	ft_sbyte(char c, int pid)
 			kill(pid, SIGUSR2);
 		while (!handshake)
 			usleep(200);
-		handshake = 0;
+		g_handshake = 0;
 		i++;
 	}
 	free(binary);

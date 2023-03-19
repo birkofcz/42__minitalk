@@ -6,7 +6,7 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 14:33:16 by sbenes            #+#    #+#             */
-/*   Updated: 2023/02/26 13:32:53 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:16:34 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 /*
 ft_strlen - for string measuring - standard from my libft
 */
-
 
 size_t	ft_strlen_gnl(const char *s)
 {
@@ -26,7 +25,6 @@ size_t	ft_strlen_gnl(const char *s)
 		i++;
 	return (i);
 }
-
 
 /*
 ft_write_pool - extra function - taking care of pool creation and its 

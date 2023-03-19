@@ -6,16 +6,19 @@
 /*   By: sbenes <sbenes@student.42prague.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/12 12:23:43 by sbenes            #+#    #+#             */
-/*   Updated: 2023/03/19 15:09:05 by sbenes           ###   ########.fr       */
+/*   Updated: 2023/03/19 15:14:11 by sbenes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
-SERVER PART - generating PID (Process ID), printing it and waiting for signal.
+SERVER PART - generating PID (Process ID), printing it and waiting 
+for signal.
 Handling the signals. 
-Handshake functionality - it will signal back to the client after every byte recieved.
-Client waits for the handshake and only then sends another byte. This speeds up the process
-and eliminating mistakes that arises from the signal timing problem;.
+Handshake functionality - it will signal back to the client 
+after every byte recieved.
+Client waits for the handshake and only then sends another 
+byte. This speeds up the processand eliminating mistakes that arises 
+from the signal timing problem;.
 */
 
 #include "../include/minitalk.h"
@@ -35,19 +38,21 @@ char	ft_bintoc(const char *binary)
 	return ((char)decimal);
 }
 
-/* 
-ft_rbyte - function to handle signal recieving, writing bite after bite into the binary.
+/*
+ft_rbyte - function to handle signal recieving, writing bit after 
+bit into the binary.
 Full binary represents one byte - decoded into char with bintoc.
 Writes the char on screen.
 Repeat.
- */
-void	ft_rbyte(int sig, siginfo_t *info, void *ucontext) 
+*/
+
+void	ft_rbyte(int sig, siginfo_t *info, void *ucontext)
 {
-	(void)ucontext;
 	static char	binary[9];
 	static int	i = 0;
 	char		c;
 
+	(void)ucontext;
 	if (sig == SIGUSR1)
 		binary[i++] = '0';
 	else if (sig == SIGUSR2)
@@ -66,14 +71,15 @@ void	ft_rbyte(int sig, siginfo_t *info, void *ucontext)
 
 int	main(int argc, char *argv[])
 {
-	int	pid_server;
+	int					pid_server;
 	struct sigaction	sa;
 
 	(void)argv;
 	if (argc == 1)
 	{
 		pid_server = getpid();
-		ft_printf("\n\033[32mServer started.\033[0m\nProcess ID: \033[31m%d\033[0m\n", pid_server);
+		ft_printf("\n\033[32mServer started.\033[0m\n");
+		ft_printf("Process ID: \033[31m%d\033[0m\n", pid_server);
 		ft_printf("Receiving...\n");
 		ft_memset(&sa, 0, sizeof(sa));
 		sa.sa_sigaction = ft_rbyte;
