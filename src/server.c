@@ -15,17 +15,18 @@ SERVER PART - generating PID (Process ID), printing it and waiting
 for signal.
 Handling the signals. 
 Handshake functionality - it will signal back to the client 
-after every byte recieved.
+after every byte recieved (every 8 bits)
 Client waits for the handshake and only then sends another 
 byte. This speeds up the processand eliminating mistakes that arises 
-from the signal timing problem;.
+from the signal timing problem.
 */
 
 #include "../include/minitalk.h"
 
 /* 
-ft_bintoc - decoder, converts binary into the character.
+ft_bintoc - decoder, converts binary into its decimal value, to the character.
  */
+
 char	ft_bintoc(const char *binary)
 {
 	int	decimal;
@@ -40,8 +41,8 @@ char	ft_bintoc(const char *binary)
 
 /*
 ft_rbyte - function to handle signal recieving, writing bit after 
-bit into the binary.
-Full binary represents one byte - decoded into char with bintoc.
+bit into the "binary" string.
+Full binary represents one byte - decoded into char with ft_bintoc.
 Writes the char on screen.
 Signalling back the handshake for client to continue with sending.
 Repeat.

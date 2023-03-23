@@ -15,9 +15,9 @@
 int	g_handshake = 0;
 
 /*
-CLIENT SIDE - takes arguments and sends string. 
+CLIENT SIDE - takes argument and sends string. 
 Decode str to binary. Sends bit by bit using signals.
-Waiting for handshake from server after each bit - works 
+Waiting for handshake from server after each byte- works 
 faster and without errors.
 */
 
@@ -44,17 +44,23 @@ char	*ft_ctobin(int c)
 	return (binary);
 }
 
-/* 
-ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
-to server - iterate through the binary string, SIGUSR1 for 0, 
-SIGUSR2 for 1. Waiting for handshake from server, speeds up the process.
- */
-
+/*
+ft_hnadshake - signal handling process for handshake. Doing 
+nothimng, just switching global variable g_handshake to 1 
+(handshake received).
+*/
 void	ft_handshake(int sig)
 {
 	(void)sig;
 	g_handshake = 1;
 }
+
+/* 
+ft_sbyte - SEND BYTE - taking the binary of the char, signalling 
+to server - iterate through the binary string, SIGUSR1 for 0, 
+SIGUSR2 for 1. Waiting for handshake from server after every 
+8 bits (one byte) speeds up the process.
+ */
 
 void	ft_sbyte(char c, int pid)
 {
